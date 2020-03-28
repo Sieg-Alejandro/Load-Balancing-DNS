@@ -23,8 +23,8 @@ def server():
     try:
         ss=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
         ss.setsockopt(mysoc.SOL_SOCKET,mysoc.SO_REUSEADDR,1)
-        ss2=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
-        ss2.setsockopt(mysoc.SOL_SOCKET,mysoc.SO_REUSEADDR,1)
+        tss1=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+        
         print("[S]: Server sockets created")
     except mysoc.error as err:
         print('{} \n'.format("socket open error ",err))
@@ -37,7 +37,8 @@ def server():
     print("[S]: Server IP address is  ",localhost_ip)
 
     ts1_binding=(ts1HostName, ts1portnum)
-    ss2.connect(ts1_binding)
+    print("ts1:info%s%s",ts1HostName,ts1portnum)
+    tss1.connect(ts1_binding)
    
     
     
@@ -48,10 +49,14 @@ def server():
         client_recv=csockid.recv(4096)
         client_query=client_recv.decode('utf-8').rstrip()
         print("%s", client_recv)
-        ss2.send(client_query.encode('utf-8'))
+        tss1.send(client_query.encode('utf-8'))
+        recvr=tss1.recv(4096)
+        print("here %s", recvr)
+        
         if(client_query=="finished sending"):
             break
-        csockid.send(client_recv)
+        csockid.send(client_query)
+    
         print("client queery: "+ client_query.lower()+'\n')
        
         

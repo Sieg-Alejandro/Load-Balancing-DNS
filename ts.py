@@ -29,13 +29,25 @@ def server():
     print("[S]: Server IP address is  ",localhost_ip)
 
     
-
     csockid,addr=ss.accept()
     print ("[S]: Got a connection request from a client at", addr)
-    # send a intro  message to the client.
-    client_recv=csockid.recv(4096)
-    client_query=client_recv.decode('utf-8')
-    print('%s',client_recv)
+    while(True):
+        client_recv=csockid.recv(4096)
+        client_query=client_recv.decode('utf-8').rstrip()
+        print("%s", client_recv)
+       
+        
+        
+        if(client_query=="finished sending"):
+            break
+        csockid.send(client_query)
+    
+        print("client queery: "+ client_query.lower()+'\n')
+       
+
+
+    
+   
     # made client query lower so i didnt need to change it and it ignores case of the ips
         
        
