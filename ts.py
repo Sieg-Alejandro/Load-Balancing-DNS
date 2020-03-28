@@ -28,39 +28,16 @@ def server():
     localhost_ip=(mysoc.gethostbyname(host))
     print("[S]: Server IP address is  ",localhost_ip)
 
-    #Open File
-    fp=open('PROJI-DNSTS.txt')
-    lines=fp.readlines()
-    DNSTABLE={}
-    TSHostname=""
-    for line in lines:
-        print(line)
-        (hostname,ip,rtype)=line.split()
-        if rtype=="NS":
-            TSHostname=hostname
-        DNSTABLE[hostname.lower()]=(ip,rtype)
-
-    print DNSTABLE
+    
 
     csockid,addr=ss.accept()
     print ("[S]: Got a connection request from a client at", addr)
     # send a intro  message to the client.
-    while(True):
-        client_recv=csockid.recv(4096)
-        client_query=client_recv.decode('utf-8').rstrip()
-        if(client_query=="finished sending"):
-            break
-        server_response=""
-        # made client query lower so i didnt need to change it and it ignores case of the ips
-        if client_query.lower() in DNSTABLE:
-            ip,rtype=DNSTABLE[client_query.lower()]
-            hostname=client_query
-            server_response="%s %s %s" % (client_query,ip,rtype)
-            csockid.send(server_response.encode('utf-8'))
-            continue
-        if client_query or client_query!="":
-            server_response=(client_query+" Error:HOST NOT FOUND")
-            csockid.send(server_response.encode('utf-8'))
+    client_recv=csockid.recv(4096)
+    client_query=client_recv.decode('utf-8')
+    print('%s',client_recv)
+    # made client query lower so i didnt need to change it and it ignores case of the ips
+        
        
         
         

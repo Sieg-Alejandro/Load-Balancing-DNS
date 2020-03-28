@@ -4,74 +4,60 @@ import random
 import socket as mysoc
 import pickle
 import sys
-import os
-def client():
-    if len(sys.argv) != 4:
-        print "Improper arguments. Please enter port number"
+# server task
+def server():
+    if len(sys.argv) != 6:
+        print "Improper arguments. Please enter socket number"
         exit()
-    if  not sys.argv[2].isdigit() and not sys.argv[3].isdigit():
-        print "Please enter a valid port number"
+    if  not sys.argv[1].isdigit():
+        print "Please enter a valid socket number"
         exit()
+    
+     
+    portnum=int(sys.argv[1])
+    ts1HostName=sys.argv[2]
+    ts1portnum=int(sys.argv[3])
+    ts2HostName=sys.argv[4]
+    ts1portnum=int(sys.argv[5])
 
-    rsport=int(sys.argv[2])
-    tsport=int(sys.argv[3])
-    rsHostName=sys.argv[1]
     try:
-        cs=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
-        csts=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
-
-        print("[C]: Client socket created")
+        ss=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+        ss.setsockopt(mysoc.SOL_SOCKET,mysoc.SO_REUSEADDR,1)
+        ss2=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
+        ss2.setsockopt(mysoc.SOL_SOCKET,mysoc.SO_REUSEADDR,1)
+        print("[S]: Server sockets created")
     except mysoc.error as err:
         print('{} \n'.format("socket open error ",err))
-# Define the port on which you want to connect to the server
-    
-    sa_sameas_myaddr =mysoc.gethostbyname(mysoc.gethostname())
-# connect to the server on local machine
-    server_binding=(rsHostName,rsport)
-#Open file and send each line
-    fp=open('PROJI-HNS.txt')
-    fp2=open("RESOLVED.txt", 'w')
-    
+    server_binding=('',portnum)
+    ss.bind(server_binding)
+    ss.listen(1)
+    host=mysoc.gethostname()
+    print("[S]: Server host name is: ",host)
+    localhost_ip=(mysoc.gethostbyname(host))
+    print("[S]: Server IP address is  ",localhost_ip)
+
+    ts1_binding=(ts1HostName, ts1portnum)
+    ss2.connect(ts1_binding)
    
-
-    lines=fp.readlines()
-    #lower cases all of the lines in the first file
-    words=[]
-    cs.connect(server_binding)
-    connected=False
-    for line in lines:
-        cs.send(line.encode('utf-8'))  
-        server_response=cs.recv(4096).decode('utf-8')
-        print server_response
-        (hostname,ip,record)=server_response.split()
-        #A record means get it from
-        if record =="A":
-            fp2.write("%s %s %s\n" % (hostname,ip,record))
-        else:
-            #Connect to TS 
-            if not connected:
-                server_bindingts=(hostname,tsport)
-                csts.connect(server_bindingts)
-                connected=True
-            #Send an recieve
-            csts.send(line.encode('utf-8'))
-            server_response=csts.recv(4096).decode('utf-8')
-            fp2.write("%s\n" % (server_response)) 
-
-    msg="finished sending"
-    cs.send(msg.encode('utf-8'))
-    cs.close()   
-    if connected:
-        csts.send(msg.encode('utf-8'))
-        csts.close()
-
-   
-    fp.close()
-    fp2.close()   
-    os.system('truncate -s -1 RESOLVED.txt') #gets rid of the trailing new line character
+    
+    
+    csockid,addr=ss.accept()
+    print ("[S]: Got a connection request from a client at", addr)
+    # send a intro  message to the client.
+    while(True):
+        client_recv=csockid.recv(4096)
+        client_query=client_recv.decode('utf-8').rstrip()
+        print("%s", client_recv)
+        ss2.send(client_query.encode('utf-8'))
+        if(client_query=="finished sending"):
+            break
+        csockid.send(client_recv)
+        print("client queery: "+ client_query.lower()+'\n')
+       
+        
+   # Close the server socket
+    ss.close()
     exit()
 
-
-
-t2 = threading.Thread(name='client', target=client)
-t2.start()
+t1 = threading.Thread(name='server', target=server)
+t1.start()
