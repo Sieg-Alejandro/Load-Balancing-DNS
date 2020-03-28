@@ -29,15 +29,12 @@ def server():
     print("[S]: Server IP address is  ",localhost_ip)
 
     #Open File
-    fp=open('PROJI-DNSTS.txt')
+    fp=open('PROJI-DNSTS2.txt')
     lines=fp.readlines()
     DNSTABLE={}
-    TSHostname=""
     for line in lines:
         print(line)
         (hostname,ip,rtype)=line.split()
-        if rtype=="NS":
-            TSHostname=hostname
         DNSTABLE[hostname.lower()]=(ip,rtype)
 
     print DNSTABLE
@@ -57,13 +54,8 @@ def server():
             hostname=client_query
             server_response="%s %s %s" % (client_query,ip,rtype)
             csockid.send(server_response.encode('utf-8'))
-            continue
-        if client_query or client_query!="":
-            server_response=(client_query+" Error:HOST NOT FOUND")
-            csockid.send(server_response.encode('utf-8'))
-       
-        
-        
+        continue
+   
    # Close the server socket
     ss.close()
     exit()
