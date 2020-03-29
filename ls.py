@@ -50,6 +50,21 @@ def server():
         client_query=client_recv.decode('utf-8').rstrip()
         print("%s", client_recv)
         tss1.send(client_query.encode('utf-8'))
+        print("jerge")
+        tss1.settimeout(5.0)
+        try:
+            server_response=tss1.recv(4096).decode('utf-8')
+            tss1.settimeout(None)
+            print server_response
+            
+            #If we get a response in this try block then we got an A record
+            
+        except mysoc.error, e:
+            #timeout so we write host not found
+            print(e)
+            print("Time out time\n")
+         
+            
         recvr=tss1.recv(4096)
         print("here %s", recvr)
         

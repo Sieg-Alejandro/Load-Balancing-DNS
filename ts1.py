@@ -30,15 +30,12 @@ def server():
     print("[S]: Server IP address is  ",localhost_ip)
 
     #Open File
-    fp=open('PROJI-DNSRS.txt')
+    fp=open('PROJ2-DNSTS1.txt')
     lines=fp.readlines()
     DNSTABLE={}
-    TSHostname=""
     for line in lines:
         print(line)
         (hostname,ip,rtype)=line.split()
-        if rtype=="NS":
-            TSHostname=hostname
         DNSTABLE[hostname.lower()]=(ip,rtype)
 
     print DNSTABLE
@@ -52,20 +49,19 @@ def server():
         if(client_query=="finished sending"):
             break
         server_response=""
-        print("client queery: "+ client_query.lower()+'\n')
+        print("client query: "+ client_query.lower()+'\n')
+        #If we have a matching record,
         if client_query.lower() in DNSTABLE:
+            print("here")
             ip,rtype=DNSTABLE[client_query.lower()]
             hostname=client_query
             server_response="%s %s %s" % (client_query,ip,rtype)
             print server_response
             csockid.send(server_response.encode('utf-8'))
-            continue
-        if client_query or client_query!="":
-            server_response="%s - NS" % TSHostname
-            csockid.send(server_response.encode('utf-8'))
-       
         
         
+      
+
    # Close the server socket
     ss.close()
     exit()
