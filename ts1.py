@@ -30,7 +30,11 @@ def server():
     print("[S]: Server IP address is  ",localhost_ip)
 
     #Open File
+<<<<<<< HEAD
     fp=open('PROJI-DNSTS1.txt')
+=======
+    fp=open('PROJ2-DNSTS1.txt')
+>>>>>>> f7fe2ec70e9da1fc4a1edd3ad1d9e6c342638ef8
     lines=fp.readlines()
     DNSTABLE={}
     for line in lines:
@@ -52,6 +56,7 @@ def server():
         print("client query: "+ client_query.lower()+'\n')
         #If we have a matching record,
         if client_query.lower() in DNSTABLE:
+            print("here")
             ip,rtype=DNSTABLE[client_query.lower()]
             hostname=client_query
             server_response="%s %s %s" % (client_query,ip,rtype)
