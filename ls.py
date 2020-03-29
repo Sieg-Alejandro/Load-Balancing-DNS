@@ -18,7 +18,7 @@ def server():
     ts1HostName=sys.argv[2]
     ts1portnum=int(sys.argv[3])
     ts2HostName=sys.argv[4]
-    ts1portnum=int(sys.argv[5])
+    ts2portnum=int(sys.argv[5])
 
     try:
         ss=mysoc.socket(mysoc.AF_INET, mysoc.SOCK_STREAM)
@@ -37,7 +37,7 @@ def server():
     print("[S]: Server IP address is  ",localhost_ip)
 
     ts1_binding=(ts1HostName, ts1portnum)
-    print("ts1:info%s%s",ts1HostName,ts1portnum)
+    print("ts1:info %s %s",ts1HostName,ts1portnum)
     tss1.connect(ts1_binding)
    
     
@@ -56,17 +56,15 @@ def server():
             server_response=tss1.recv(4096).decode('utf-8')
             tss1.settimeout(None)
             print server_response
-            
             #If we get a response in this try block then we got an A record
-            
         except mysoc.error, e:
             #timeout so we write host not found
             print(e)
             print("Time out time\n")
          
-            
-        recvr=tss1.recv(4096)
-        print("here %s", recvr)
+
+        #recvr=tss1.recv(4096)
+        #print("here %s", recvr)
         
         if(client_query=="finished sending"):
             break
