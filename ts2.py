@@ -29,7 +29,7 @@ def server():
     print("[S]: Server IP address is  ",localhost_ip)
 
     #Open File
-    fp=open('PROJI-DNSTS2.txt')
+    fp=open('PROJ2-DNSTS2.txt')
     lines=fp.readlines()
     DNSTABLE={}
     for line in lines:
