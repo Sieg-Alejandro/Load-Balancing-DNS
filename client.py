@@ -42,7 +42,10 @@ def client():
         cs.send(line.encode('utf-8'))  
         server_response=cs.recv(4096).decode('utf-8')
         print server_response
-        fp2.write("%s \n" % (server_response))
+        if(server_response == "not in ts1 or ts2"):
+            fp2.write("%s - Error:Host Not Found \n" % (line[:-1]))
+        else:    
+            fp2.write("%s \n" % (server_response))
         
         #A record means get it from
        

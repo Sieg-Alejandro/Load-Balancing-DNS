@@ -1,4 +1,5 @@
 www.princeton.edu 128.1.1.4 A 
 rutgers.com 172.34.4.6 A 
-not in ts1 or ts2 
+nothinghere.com - Error:Host Not Found 
 amazon.org 94.5.6.7 A 
+chase.com 55.55.5.5 A 

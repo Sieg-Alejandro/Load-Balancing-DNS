@@ -92,6 +92,7 @@ def server():
         #print("here %s", recvr)
         
         if(client_query=="finished sending"):
+            tss2.send(client_query.encode('utf-8'))
             break
         csockid.send(server_response.encode('utf-8'))
     
