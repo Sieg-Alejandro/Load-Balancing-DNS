@@ -3,3 +3,5 @@ rutgers.com 172.34.4.6 A
 nothinghere.com - Error:Host Not Found 
 amazon.org 94.5.6.7 A 
 chase.com 55.55.5.5 A 
+sieg.com - Error:Host Not Found 
+yourmom.co - Error:Host Not Found 
